@@ -5,7 +5,9 @@ import FontAwesome from '@expo/vector-icons/FontAwesome'
 
 export default function TabLayout() {
   return (
-   <Tabs>
+   <Tabs screenOptions={{
+    headerShown: false,
+   }}>
     <Tabs.Screen name='index'
     options={{
         title: 'Home',

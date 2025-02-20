@@ -3,22 +3,25 @@ import React, { useEffect } from 'react'
 import { Link, useRouter } from 'expo-router'
 import services from '../../utils/services'
 import {client} from '../../utils/kindeConfig'
-import {superbase} from '../../utils/superbase'
-
+import {superbase} from '../../utils/SuperbaseConfig'
+import Headers from '../../components/headers'
+import colors, { Colors } from '../../utils/colors'
+import CircularChart from '../../components/circularChart'
 export default function Home() {
   const router = useRouter();
 
-  // useEffect(() => {
-  //   checkUserAuth();
-  // },[])
+  useEffect(() => {
+  //   // checkUserAuth();
+    getCategoryList();
+  },[])
 
-  // const checkUserAuth = async () => {
-  //   const result = await services.getData('login');
-  //   if(result!=="true"){
-  //     router.replace('/login');
-  //   }
-  //   console.log("result",result);
-  // }
+  const checkUserAuth = async () => {
+    const result = await services.getData('login');
+    if(result!=="true"){
+      router.replace('/login');
+    }
+    console.log("result",result);
+  }
 
   const handleLogout = async () => {
     const loggout = await client.logout();
@@ -28,7 +31,10 @@ export default function Home() {
   }
   }
   const getCategoryList = async () => {
-    const { data, error } = await superbase.from('Category').select('*');
+    const user = await client.getUserDetails()
+    const { data, error } = await superbase.from('Category')
+    .select('*')
+    .eq('created_by',user.email )
     if(error){
       console.log("error",error);
     }else{
@@ -38,10 +44,9 @@ export default function Home() {
 
 }
   return (
-    <View>
-      <Text>Home</Text>
-      <Button title='Logout' onPress={handleLogout}/>
-      
+    <View style={{marginTop:20,padding:20,backgroundColor:colors.PRIMARY,height:150}}>
+    <Headers /> 
+    <CircularChart />
     </View>
-  )
+  ) 
 }
