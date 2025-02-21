@@ -1,4 +1,4 @@
-import { View, Text, Button, Pressable } from 'react-native'
+import { View, Text, Button, Pressable, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import { Link, useRouter } from 'expo-router'
 import services from '../../utils/services'
@@ -7,6 +7,7 @@ import {superbase} from '../../utils/SuperbaseConfig'
 import Headers from '../../components/headers'
 import colors, { Colors } from '../../utils/colors'
 import CircularChart from '../../components/circularChart'
+import Ionicons from '@expo/vector-icons/Ionicons';
 export default function Home() {
   const router = useRouter();
 
@@ -44,9 +45,23 @@ export default function Home() {
 
 }
   return (
-    <View style={{marginTop:20,padding:20,backgroundColor:colors.PRIMARY,height:150}}>
+    <View style={{marginTop:20,flex:1}}>
+      <View style={{padding:20,backgroundColor:colors.PRIMARY,height:150}}>
     <Headers /> 
     <CircularChart />
     </View>
+
+    <Link href={'/add-new-category'} style={styles.container}>
+    <Ionicons name="add-circle" size={64} color={colors.PRIMARY} />
+    </Link>
+    </View>
   ) 
 }
+
+const styles = StyleSheet.create({
+  container:{
+    position:"absolute",
+    bottom:16,
+    right:16,
+    }
+})
