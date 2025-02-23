@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { Link, useRouter } from 'expo-router'
 import services from '../../utils/services'
 import {client} from '../../utils/kindeConfig'
-import {superbase} from '../../utils/SuperbaseConfig'
+import {supabase, superbase} from '../../utils/SuperbaseConfig'
 import Headers from '../../components/headers'
 import colors, { Colors } from '../../utils/colors'
 import CircularChart from '../../components/circularChart'
@@ -11,8 +11,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import CategoryList from '../../components/CategoryList'
 export default function Home() {
   const router = useRouter();
-
-  
+  const [categoryList,setCategoryList] = React.useState([]);
 
   useEffect(() => {
   //   // checkUserAuth();
@@ -36,13 +35,14 @@ export default function Home() {
   }
   const getCategoryList = async () => {
     const user = await client.getUserDetails()
-    const { data, error } = await superbase.from('Category')
+    const { data, error } = await supabase.from('Category')
     .select('*,CategoryItems(*)')
     .eq('created_by',user.email )
     if(error){
       console.log("error",error);
     }else{
       console.log("data",data);
+      setCategoryList(data);
   }
 
 
@@ -52,7 +52,7 @@ export default function Home() {
       <View style={{padding:20,backgroundColor:colors.PRIMARY,height:150}}>
     <Headers /> 
     <CircularChart />
-    <CategoryList />
+    <CategoryList categoryList={categoryList}/>
     </View> 
 
     <Link href={'/add-new-category'} style={styles.container}>
