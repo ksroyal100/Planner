@@ -8,8 +8,11 @@ import Headers from '../../components/headers'
 import colors, { Colors } from '../../utils/colors'
 import CircularChart from '../../components/circularChart'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import CategoryList from '../../components/CategoryList'
 export default function Home() {
   const router = useRouter();
+
+  
 
   useEffect(() => {
   //   // checkUserAuth();
@@ -34,7 +37,7 @@ export default function Home() {
   const getCategoryList = async () => {
     const user = await client.getUserDetails()
     const { data, error } = await superbase.from('Category')
-    .select('*')
+    .select('*,CategoryItems(*)')
     .eq('created_by',user.email )
     if(error){
       console.log("error",error);
@@ -49,7 +52,8 @@ export default function Home() {
       <View style={{padding:20,backgroundColor:colors.PRIMARY,height:150}}>
     <Headers /> 
     <CircularChart />
-    </View>
+    <CategoryList />
+    </View> 
 
     <Link href={'/add-new-category'} style={styles.container}>
     <Ionicons name="add-circle" size={64} color={colors.PRIMARY} />
