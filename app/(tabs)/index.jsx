@@ -34,14 +34,13 @@ export default function Home() {
   }
   }
   const getCategoryList = async () => {
-    const user = await client.getUserDetails()
+    // const user = await client.getUserDetails()
     const { data, error } = await supabase.from('Category')
     .select('*,CategoryItems(*)')
-    .eq('created_by',user.email )
+    // .eq('created_by',user.email )
     if(error){
-      console.log("error",error);
+      console.log("error",error); 
     }else{
-      console.log("data",data);
       setCategoryList(data);
   }
 
