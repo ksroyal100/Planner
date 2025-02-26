@@ -6,12 +6,15 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { supabase, superbase } from '../utils/SuperbaseConfig';
 import {client } from './../utils/kindeConfig'
+import { useRouter } from 'expo-router';
 
 export default function AddNewCategory() {
   const [selectedIcons, setSelectedIcons] = React.useState('IC');
   const [selectColor, setSelectColor] = React.useState(colors.YELLOW);
   const [categoryName, setCategoryName] = React.useState();
   const [totalBudget, setTotalBudget] = React.useState();
+
+  const router = useRouter()
 
 
     const onCreateCategory = async () => {
@@ -35,7 +38,12 @@ export default function AddNewCategory() {
           console.log("Error:", error);
           return { success: false, error };
         }
-    
+        router.replace({
+          pathname: '/category-detail', 
+          params:{
+            categoryId:data[0].id
+          }
+        })
         ToastAndroid.show("Category Added Successfully", ToastAndroid.SHORT);
         return { success: true, data };
       } catch (err) {

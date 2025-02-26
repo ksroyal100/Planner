@@ -1,7 +1,20 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { useRouter } from 'expo-router'
 
 export default function CategoryList({categoryList}) {
+
+  const router = useRouter()
+
+  const onCategoryClick = (category) => {
+    router.push({
+      pathname:'/category-detail',
+      params:{
+        categoryId:category.id
+      }
+    })
+  }
+
   return (
     <View style={{
       marginTop:20,
@@ -13,8 +26,9 @@ export default function CategoryList({categoryList}) {
         color:'gray',
       }}>Latest Budget</Text>
       <View>
-        {categoryList?.map((category,index)=>(
-          <View key={index} style={style.container}>
+        {categoryList&&categoryList?.map((category,index)=>(
+          <TouchableOpacity key={index} style={style.container}
+          onPress={()=>onCategoryClick(category)}>
             <View style={style.iconContainer}>
               <Text style={[style.iconText,{backgroundColor:category.color}]}>
                 {category.icon}</Text>
@@ -24,9 +38,9 @@ export default function CategoryList({categoryList}) {
               <Text style={style.categoryText}>{category.name}</Text>
               <Text style={style.itemCount}> {category?.CategoryItems?.length} Items</Text>
             </View>
-            <Text>5000</Text>
+            <Text style={{fontFamily:"outfit-bold", fontSize:17}}>5000</Text>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     </View>
@@ -40,6 +54,9 @@ const style = StyleSheet.create({
     flexDirection:"row",
     gap:10,
     alignItems:"center",
+    backgroundColor:"white",
+    padding:10,
+    borderRadius:15,
 
   },
   subContainer:{
