@@ -1,10 +1,10 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ToastAndroid, ActivityIndicator } from 'react-native'
 import React from 'react'
 import colors from '../utils/colors';
 import ColorPicker from '../components/ColorPicker';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { supabase, superbase } from '../utils/SuperbaseConfig';
+import { supabase } from '../utils/SuperbaseConfig';
 import {client } from './../utils/kindeConfig'
 import { useRouter } from 'expo-router';
 
@@ -13,11 +13,13 @@ export default function AddNewCategory() {
   const [selectColor, setSelectColor] = React.useState(colors.YELLOW);
   const [categoryName, setCategoryName] = React.useState();
   const [totalBudget, setTotalBudget] = React.useState();
+const [loading,setLoading] = React.useState(false)
 
   const router = useRouter()
 
 
     const onCreateCategory = async () => {
+setLoading(true)
       try {
         // const user = await client.getUserDetails();
         const { data, error } = await supabase
@@ -45,6 +47,7 @@ export default function AddNewCategory() {
           }
         })
         ToastAndroid.show("Category Added Successfully", ToastAndroid.SHORT);
+setLoading(false)
         return { success: true, data };
       } catch (err) {
         console.error("Unexpected Error:", err);
@@ -79,8 +82,13 @@ export default function AddNewCategory() {
 
       <TouchableOpacity
       onPress={()=>onCreateCategory()}
-      style={{backgroundColor:colors.PRIMARY,padding:10,marginTop:20,borderRadius:10}} disabled={!categoryName&&!totalBudget}>
+      style={{backgroundColor:colors.PRIMARY,padding:10,marginTop:20,borderRadius:10}} disabled={!categoryName||!totalBudget||loading}>
+{
+loading ? 
+<ActivityIndicator color={colors.WHITE}/> :
+
         <Text style={{textAlign:"center",color:colors.WHITE,fontSize:20}}>Add Category</Text>
+}
       </TouchableOpacity>
 
     </View>

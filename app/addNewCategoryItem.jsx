@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
+  ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
 import colors from "../utils/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -15,17 +16,21 @@ import Feather from "@expo/vector-icons/Feather";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../utils/SuperbaseConfig";
 import { decode } from "base64-arraybuffer";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React from "react";
 
 const placeholder =
   "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png";
 export default function AddNewCategoryItem() {
   const [image, setImage] = React.useState(placeholder);
   const [previewImage, setPreviewImage] = React.useState(placeholder);
-
+  const { categoryId } = useLocalSearchParams();
+  const router = useRouter();
   const [name, setName] = React.useState();
-  const [uri, setUri] = React.useState();
+  const [url, setUrl] = React.useState();
   const [cost, setCost] = React.useState();
   const [note, setNote] = React.useState();
+  const [loading, setLoading] = React.useState(false);
 
   const onImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -42,19 +47,96 @@ export default function AddNewCategoryItem() {
     }
   };
 
-  const onClickAdd = async () => {
-    const fileName = Date.now();
-    const { data, error } = await supabase.storage
-      .from("images")
-      .upload(fileName + ".png", decode(image), {
-        contentType: "image/png",
-      });
+  //   const onClickAdd = async () => {
+  //   setLoading(true)
+  //     const fileName = Date.now();
+  //     const { data, error } = await supabase.storage
+  //       .from("images")
+  //       .upload(fileName + ".png", decode(image), {
+  //         contentType: "image/png",
+  //       });
 
-    if (data) {
-const fileUrl = "https://gjlwbqugbiqwrohmgcnr.supabase.co/storage/v1/object/public/images/"+data.path
-      console.log("File Upload:", fileUrl);
-    } else {
-      console.log("Upload Error", error);
+  //     if (data) {
+  // const fileUrl = "https://gjlwbqugbiqwrohmgcnr.supabase.co/storage/v1/object/public/images/"+fileName+".png"
+  // const {data,error} = await supabase.from('CategoryItems').insert([{
+  // name:name,
+  // cost:cost,
+  // url:url,
+  // image:fileUrl,
+  // note:note,
+  // category_id:categoryId
+  // }]).select();
+  // ToastAndroid.show('New Item Added!!!',ToastAndroid.SHORT)
+  // setLoading(false)
+  // router.replace({
+  //           pathname: '/category-detail',
+  //           params:{
+  //             categoryId:categoryId
+  //           }
+  //         })
+  //   };
+  //     }
+
+  const onClickAdd = async () => {
+setLoading(true)
+    const fileName = Date.now();
+
+    // Log the image base64 data to check if it's correct
+    console.log("Uploading image data:", image);
+
+    // Ensure the image is a valid base64 string
+    if (!image) {
+      console.error("No image data available.");
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.storage
+        .from("images")
+        .upload(fileName + ".png", decode(image), {
+          contentType: "image/png",
+        });
+
+      if (error) {
+        console.error("Error uploading image:", error);
+        return;
+      }
+
+      // If the image upload is successful, insert into the database
+      const fileUrl =
+        "https://gjlwbqugbiqwrohmgcnr.supabase.co/storage/v1/object/public/images/" +
+        fileName +
+        ".png";
+
+      const { data: insertData, error: insertError } = await supabase
+        .from("CategoryItems")
+        .insert([
+          {
+            name: name,
+            cost: cost,
+            url: url,
+            image: fileUrl,
+            note: note,
+            category_id: categoryId,
+          },
+        ])
+        .select();
+
+      if (insertError) {
+        console.error("Error inserting data into CategoryItems:", insertError);
+        return;
+      }
+
+      ToastAndroid.show("New Item Added!!!", ToastAndroid.SHORT);
+      router.replace({
+        pathname: "/category-detail",
+        params: {
+          categoryId: categoryId,
+        },
+      });
+      console.log("Item added successfully with categoryId:", categoryId);
+    } catch (error) {
+      console.error("An error occurred:", error);
     }
   };
 
@@ -130,7 +212,7 @@ const fileUrl = "https://gjlwbqugbiqwrohmgcnr.supabase.co/storage/v1/object/publ
           <TextInput
             placeholder="Url"
             style={{ fontSize: 17, width: "100%" }}
-            onChangeText={(value) => setUri(value)}
+            onChangeText={(value) => setUrl(value)}
           />
         </View>
         <View
@@ -161,19 +243,23 @@ const fileUrl = "https://gjlwbqugbiqwrohmgcnr.supabase.co/storage/v1/object/publ
             borderRadius: 99,
             marginTop: 25,
           }}
-          disabled={!name || !cost}
+          disabled={!name || !cost || loading}
           onPress={() => onClickAdd()}
         >
-          <Text
-            style={{
-              color: colors.WHITE,
-              textAlign: "center",
-              fontFamily: "outfit",
-              fontSize: 20,
-            }}
-          >
-            Add
-          </Text>
+          {loading ? (
+            <ActivityIndicator color={colors.WHITE} />
+          ) : (
+            <Text
+              style={{
+                color: colors.WHITE,
+                textAlign: "center",
+                fontFamily: "outfit",
+                fontSize: 20,
+              }}
+            >
+              Add
+            </Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>

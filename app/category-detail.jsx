@@ -12,7 +12,6 @@ export default function CategoryDetail() {
   const [categoryData, setCategoryData] = React.useState([]);
   const router = useRouter()
   useEffect(() => {
-    console.log("categoryId", categoryId);
     categoryId && getCategoryDetail();
   }, [categoryId]);
 
@@ -24,7 +23,7 @@ export default function CategoryDetail() {
       .single();
     if (data) {
       setCategoryData(data);
-      console.log("data", data);
+      // console.log("data", data);
     } else {
       console.log("error", error);
     }
@@ -41,7 +40,7 @@ export default function CategoryDetail() {
       <Link
       href={{
         pathname:'/addNewCategoryItem',
-        param:{
+        params:{
           categoryId:categoryData.id
         }
       }}
