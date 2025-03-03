@@ -10,10 +10,11 @@ export default function TabLayout() {
    }}>
     <Tabs.Screen name='index'
     options={{
-        title: 'Home',
-        tabBarIcon: ({color}) => <FontAwesome name="home" size={24} color={color} />
+// tabBarIcon:false
+        // title: 'Home',
+        // tabBarIcon: ({color}) => <FontAwesome name="home" size={24} color={color} />
     }} />
-    <Tabs.Screen name='history'
+    {/* <Tabs.Screen name='history'
     options={{
         title: 'History',
         tabBarIcon: ({color}) => <FontAwesome name="history" size={24} color={color} />
@@ -22,7 +23,7 @@ export default function TabLayout() {
     options={{
         title: 'Profile',
         tabBarIcon: ({color}) => <FontAwesome name="user" size={24} color={color} />
-    }} />
+    }} /> */}
     
    </Tabs>
   )

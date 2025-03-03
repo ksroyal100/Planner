@@ -15,7 +15,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Feather from "@expo/vector-icons/Feather";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../utils/SuperbaseConfig";
-import { decode } from "base64-arraybuffer";
+import { decode } from 'base64-arraybuffer'
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 

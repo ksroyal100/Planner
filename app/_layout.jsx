@@ -13,10 +13,10 @@ export default function HomeLayout() {
     <Stack screenOptions={{
         headerShown: false,
     }}>
-      <Stack.Screen name="(tabs)" 
+      {/* <Stack.Screen name="(tabs)" 
       options={{
         headerShown: false,
-      }} />
+      }} /> */}
       <Stack.Screen name="add-new-category"
       options={{
         presentation: 'modal',

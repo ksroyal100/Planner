@@ -1,8 +1,19 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity, ToastAndroid } from "react-native";
 import React from "react";
 import colors from "../../utils/colors";
+import {EvilIcons} from '@expo/vector-icons'
+import {supabase} from "../../utils/SuperbaseConfig"
 
-export default function CourseItemList({ categoryData }) {
+export default function CourseItemList({ categoryData,setUpdateRecord }) {
+const [expandItem,setExpandItem] = React.useState()
+
+const onDeleteItem=async(id)=>{
+const {error} = await supabase.from('CategoryItems').delete().eq('id',id)
+ToastAndroid.show("Item Deleted!",ToastAndroid.SHORT)
+setUpdateRecord(true)
+
+}
+
   return (
     <View style={{ marginTop: 20 }}>
       <Text style={{ fontFamily: "outfit-bold", fontSize: 20 }}>
@@ -12,7 +23,8 @@ export default function CourseItemList({ categoryData }) {
         {
           categoryData?.CategoryItems?.map((item, index) => (
             <View key={index}>
-              <View
+              <TouchableOpacity
+onPress={()=>setExpandItem(index)}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -38,6 +50,7 @@ export default function CourseItemList({ categoryData }) {
                       fontFamily: "outfit",
                       color: colors.GRAY,
                     }}
+numberOfLines={2}
                   >
                     {item.url}
                   </Text>
@@ -51,7 +64,13 @@ export default function CourseItemList({ categoryData }) {
                 >
                   {item.cost}₹
                 </Text>
-              </View>
+              </TouchableOpacity>
+{expandItem==index&&
+<View style={{display:"flex",flexDirection:"row",gap:10,justifyContent:"flex-end"}}>
+<TouchableOpacity onPress={()=>onDeleteItem(item.id)}>
+<EvilIcons name="trash" size={34} color="red"/>
+</TouchableOpacity>
+</View>}
               {categoryData?.CategoryItems.length - 1 != index && (
                 <View
                   style={{
