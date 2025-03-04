@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, StatusBar } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
 import {useFonts} from 'expo-font'
@@ -10,6 +10,8 @@ export default function HomeLayout() {
     "outfit-medium":require('./../assets/fonts/Outfit-Medium.ttf'),
   })
   return (
+<>
+ <StatusBar translucent={true} backgroundColor="transparent" /> 
     <Stack screenOptions={{
         headerShown: false,
     }}>
@@ -31,5 +33,6 @@ export default function HomeLayout() {
         headerTitle:"Add New Item"
       }} />
       </Stack>
+</>
   )
 }

@@ -23,7 +23,7 @@ export default function Home() {
   const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
-    //   // checkUserAuth();
+      // checkUserAuth();
     getCategoryList();
   }, []);
 
@@ -32,7 +32,6 @@ export default function Home() {
     if (result !== "true") {
       router.replace("/login");
     }
-    console.log("result", result);
   };
 
   const handleLogout = async () => {
@@ -57,8 +56,9 @@ export default function Home() {
     data && setLoading(false);
   };
   return (
-    <View style={{ marginTop: 20, flex: 1 }}>
+    <View style={{ marginTop: 30, flex: 1 }}>
       <ScrollView
+showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
             onRefresh={() => getCategoryList()}

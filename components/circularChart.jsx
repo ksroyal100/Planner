@@ -14,11 +14,11 @@ const [totalCalculatedEstimate,setTotalCalulatedEstimate] = React.useState(0)
   //   { value: 123, color: colors.GRAY },
   // ]
 
-//   useEffect(() => {
-//     updateCircularChart();
-//   }, []);
+  // useEffect(() => {
+  //   updateCircularChart();
+  // }, []);
 
-//   const updateCircularChart = () => {
+  // const updateCircularChart = () => {
 //     setSliceColor([]);
 //     setValue([]);
 // let totalEstimate = 0
@@ -36,7 +36,7 @@ const [totalCalculatedEstimate,setTotalCalulatedEstimate] = React.useState(0)
 
 useEffect(() => {
   updateCircularChart();
-}, []);
+}, [updateCircularChart]);
 
 const updateCircularChart = () => {
   let totalEstimate = 0;
@@ -44,7 +44,6 @@ const updateCircularChart = () => {
   let newValues = [];
 
   if (!categoryList || categoryList.length === 0) {
-    console.warn("Category list is empty, cannot update chart.");
     return;
   }
 
@@ -65,7 +64,6 @@ const updateCircularChart = () => {
   });
 
   if (totalEstimate === 0) {
-    console.warn("Total estimate is zero, chart data is invalid.");
     return;
   }
 
@@ -79,7 +77,7 @@ const updateCircularChart = () => {
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 20, fontFamily: "outfit" }}>
-        Total Estimate: <Text style={{ fontFamily: "outfit-bold" }}>{totalCalculatedEstimate}₹</Text>
+        Total Estimate: <Text style={{ fontFamily: "outfit-bold" }}>₹{totalCalculatedEstimate}</Text>
       </Text>
       <View style={styles.subcontainer}>
         <PieChart
@@ -111,8 +109,9 @@ const updateCircularChart = () => {
 <View key={index} style={{
               display: "flex",
               flexDirection: "row",
-              gap: 5,
-              marginTop: 10,
+              // gap: 5,
+              marginTop: 8,
+marginRight:10
             }}>
  <MaterialCommunityIcons
               name="checkbox-blank-circle"

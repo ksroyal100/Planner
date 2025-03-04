@@ -62,7 +62,7 @@ numberOfLines={2}
                     marginLeft: 10,
                   }}
                 >
-                  {item.cost}₹
+                  ₹{item.cost}
                 </Text>
               </TouchableOpacity>
 {expandItem==index&&

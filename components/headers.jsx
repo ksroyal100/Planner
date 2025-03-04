@@ -34,7 +34,7 @@ export default function Headers() {
             <Text style={{color:colors.WHITE,fontSize:16,fontFamily:"outfit"}}>Welcome</Text>
             <Text style={{color:colors.WHITE,fontSize:20,fontWeight:"outfit-bold"}}>{user?.given_name}</Text>
         </View>
-        <Ionicons name='notifications' size={24} color={colors.WHITE} />
+        <Ionicons style={{marginRight:"10"}} name='notifications' size={24} color={colors.WHITE} />
      </View>
     </View>
   )

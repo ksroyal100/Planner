@@ -71,7 +71,7 @@ setLoading(false)
       </View>
       <View style={styles.inputView}>
       <MaterialIcons name="local-offer" size={24} color={colors.GRAY} />
-      <TextInput onChangeText={(value) =>setCategoryName(value)} placeholder="Category Name" style={{width:"100%",fontSize:20}}/>
+      <TextInput maxLength={8} onChangeText={(value) =>setCategoryName(value)} placeholder="Category Name" style={{width:"100%",fontSize:20}}/>
       </View>
       <View style={styles.inputView}>
       <FontAwesome name="rupee" size={24} color={colors.GRAY} />
