@@ -7,7 +7,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function CircularChart({ categoryList }) {
   const widthAndHeight = 150;
   const [value, setValue] = React.useState([1]);
-  const [sliceColor, setSliceColor] = React.useState([colors.ORANGE]);
+  const [sliceColor, setSliceColor] = React.useState([colors.GRAY]);
 const [totalCalculatedEstimate,setTotalCalulatedEstimate] = React.useState(0)
 
   // const series = [
@@ -34,9 +34,7 @@ const [totalCalculatedEstimate,setTotalCalulatedEstimate] = React.useState(0)
 //     });
 //   };
 
-useEffect(() => {
-  updateCircularChart();
-}, [updateCircularChart]);
+
 
 const updateCircularChart = () => {
   let totalEstimate = 0;
@@ -72,6 +70,11 @@ const updateCircularChart = () => {
   setTotalCalulatedEstimate(totalEstimate);
 };
 
+useEffect(() => {
+  if (categoryList.length > 0) {
+    updateCircularChart();
+  }
+}, [categoryList]); 
 
 
   return (

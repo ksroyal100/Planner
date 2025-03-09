@@ -18,19 +18,20 @@ import CircularChart from "../../components/circularChart";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CategoryList from "../../components/CategoryList";
 export default function Home() {
+
   const router = useRouter();
   const [categoryList, setCategoryList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
-      // checkUserAuth();
+      checkUserAuth();
     getCategoryList();
   }, []);
 
   const checkUserAuth = async () => {
     const result = await services.getData("login");
     if (result !== "true") {
-      router.replace("/login");
+      router.replace("/login"); 
     }
   };
 

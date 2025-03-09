@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useRouter } from 'expo-router'
+import colors from '../utils/colors'
 
 export default function CategoryList({categoryList}) {
 
@@ -29,9 +30,18 @@ return totalCost
       <Text style={{
         fontFamily:'outfit-bold',
         fontSize:20,
-        marginBottom:20,
+        // marginBottom:20,
         color:'gray',
       }}>Latest Budget</Text>
+<View style={{
+          width: "100%",
+          backgroundColor: colors.GRAY,
+          height: 2,
+          borderRadius: 99,
+          marginTop:12,
+marginBottom:20
+        }}>
+</View>
       <View>
         {categoryList&&categoryList?.map((category,index)=>(
           <TouchableOpacity key={index} style={style.container}
