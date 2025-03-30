@@ -1,16 +1,12 @@
 import {
   View,
-  Text,
-  Button,
-  Pressable,
   StyleSheet,
   ScrollView,
   RefreshControl,
 } from "react-native";
 import React, { useEffect } from "react";
-import { Link, useRouter } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import services from "../../utils/services";
-import { client } from "../../utils/kindeConfig";
 import { supabase } from "../../utils/SuperbaseConfig";
 import Headers from "../../components/headers";
 import colors from "../../utils/colors";
@@ -18,37 +14,38 @@ import CircularChart from "../../components/circularChart";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CategoryList from "../../components/CategoryList";
 export default function Home() {
-
   const router = useRouter();
   const [categoryList, setCategoryList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
+  const { email } = useLocalSearchParams();
+
   useEffect(() => {
-      checkUserAuth();
+    checkUserAuth();
     getCategoryList();
   }, []);
 
-  const checkUserAuth = async () => {
+const checkUserAuth = async () => {
     const result = await services.getData("login");
-    if (result !== "true") {
-      router.replace("/login"); 
-    }
-  };
+    const storedEmail = await services.getData("user_email");
 
-  const handleLogout = async () => {
-    const loggout = await client.logout();
-    if (loggout) {
-      await services.storeData("login", "false");
-      router.replace("/login");
+    if (!result || result !== "true") {
+        router.replace("/login");
+    } else {
+        if (!email && storedEmail) {
+            setEmail(storedEmail); 
+        }
     }
-  };
+};
+
+
   const getCategoryList = async () => {
-    setLoading(true);
-    // const user = await client.getUserDetails()
+    setLoading(true); 
+    const storedEmail = await services.getData("user_email");
     const { data, error } = await supabase
       .from("Category")
-      .select("*,CategoryItems(*)");
-    // .eq('created_by',user.email )
+      .select("*,CategoryItems(*)")
+      .eq("created_by", storedEmail);
     if (error) {
       console.log("error", error);
     } else {
@@ -56,10 +53,14 @@ export default function Home() {
     }
     data && setLoading(false);
   };
+
+
+
+
   return (
     <View style={{ marginTop: 30, flex: 1 }}>
       <ScrollView
-showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
             onRefresh={() => getCategoryList()}
@@ -73,7 +74,7 @@ showsVerticalScrollIndicator={false}
           <Headers />
         </View>
         <View style={{ padding: 20, marginTop: -75 }}>
-          <CircularChart categoryList={categoryList}/>
+          <CircularChart categoryList={categoryList} />
           <CategoryList categoryList={categoryList} />
         </View>
       </ScrollView>

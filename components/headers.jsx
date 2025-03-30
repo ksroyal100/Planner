@@ -1,18 +1,34 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { client } from '../utils/kindeConfig';
 import colors from '../utils/colors';
 import {Ionicons } from '@expo/vector-icons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import services from '../utils/services';
+import { useRouter } from 'expo-router';
 
 export default function Headers() {
-    const [user, setUser] =useState();
+    const [user, setUser] =useState("Guest");
     useEffect(() => {
         getUserData();
     },[])
+    const router = useRouter();
     const getUserData = async () => {
-        const user = await client.getUserDetails()
-        setUser(user);
+    const storedEmail = await services.getData("user_name");
+        setUser(storedEmail);
     }
+const handleLogout = async () => {
+    await services.storeData("login", "false");
+    await services.storeData("user_name", "");
+    await services.storeData("user_email", "");
+
+    console.log("Logging out...");
+
+    setTimeout(() => {
+        router.replace("/login");
+    }, 100);
+};
+
+
   return (
     <View style={{
         display:"flex",
@@ -20,22 +36,26 @@ export default function Headers() {
         gap:8,
         alignItems:"center",
     }}>
-     <Image source={{uri:user?.picture}} 
-     style={{width:50,height:50,borderRadius:99,marginRight:10}}
-     />
+
      <View style={{
             display:"flex",
             flexDirection:"row",
             alignItems:"center",    
             justifyContent:"space-between",
-            width:"85%",
+            width:"98%",
      }}>
-        <View>
+        <View >
+
             <Text style={{color:colors.WHITE,fontSize:16,fontFamily:"outfit"}}>Welcome</Text>
-            <Text style={{color:colors.WHITE,fontSize:20,fontWeight:"outfit-bold"}}>{user?.given_name}</Text>
+            <Text style={{color:colors.WHITE,fontSize:20,fontWeight:"outfit-bold"}}>{user}</Text>
         </View>
-        <Ionicons style={{marginRight:"10"}} name='notifications' size={24} color={colors.WHITE} />
-     </View>
+
+<TouchableOpacity onPress={handleLogout}>
+        {/* <Ionicons style={{marginRight:"10"}} name='notifications' size={24} color={colors.WHITE} /> */}
+<FontAwesome name="power-off" size={24} color={colors.WHITE}  />
+</TouchableOpacity>
+
+     </View> 
     </View>
   )
 }

@@ -1,30 +1,17 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, ToastAndroid } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import login from "../../assets/images/loginimg.png";
 import Colors from "../../utils/colors.jsx";
-import { client } from "../../utils/kindeConfig.jsx";
-import services from "../../utils/services.jsx";
 import { useRouter } from "expo-router";
-import * as Keychain from "react-native-keychain";
 
-
-export default function LoginScreen() { 
+export default function LoginScreen() {
   const router = useRouter();
-
-const handleSignIn = async () => {
-  try {
-    const token = await client.login();
-    if (token) {
-      await services.storeData("login", "true");
-      console.log("token", token);
-      router.replace("/");
-    } else {
-      console.log("Login failed: No token received");
-    }
-  } catch (error) {
-    console.error("Login error:", error);
-  }
-};
 
   return (
     <View
@@ -40,7 +27,7 @@ const handleSignIn = async () => {
           width: "100%",
           height: "100%",
           padding: 20,
-          marginTop: -30,
+          marginTop: -10,
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
         }}
@@ -66,19 +53,20 @@ const handleSignIn = async () => {
         >
           Stay on Track, Event by Event: Your Personal Planner App!
         </Text>
-        <TouchableOpacity onPress={handleSignIn} activeOpacity={0.7}>
+        <TouchableOpacity onPress={()=> router.push('/form')} activeOpacity={0.7}>
           <Text
             style={{
               backgroundColor: "white",
               padding: 10,
               borderRadius: 10,
               color: Colors.PRIMARY,
-              fontSize: 20,
+              fontSize: 25,
               textAlign: "center",
               marginTop: 30,
+              // fontFamily:"outfit-bold"
             }}
           >
-            Log In
+            Get Started
           </Text>
         </TouchableOpacity>
       </View>
