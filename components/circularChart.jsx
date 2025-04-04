@@ -10,31 +10,6 @@ export default function CircularChart({ categoryList }) {
   const [sliceColor, setSliceColor] = React.useState([colors.GRAY]);
 const [totalCalculatedEstimate,setTotalCalulatedEstimate] = React.useState(0)
 
-  // const series = [
-  //   { value: 123, color: colors.GRAY },
-  // ]
-
-  // useEffect(() => {
-  //   updateCircularChart();
-  // }, []);
-
-  // const updateCircularChart = () => {
-//     setSliceColor([]);
-//     setValue([]);
-// let totalEstimate = 0
-//     categoryList.forEach((item, index) => {
-//       let itemTotalCost = 0;
-//       item.CategoryItems?.forEach((item_) => {
-//         itemTotalCost = itemTotalCost + item_.cost;
-// totalEstimate = totalEstimate+item_.cost
-//       });
-// setTotalCalulatedEstimate(totalEstimate)
-//       setSliceColor((sliceColor) => [...sliceColor, colors.COLOR_LIST[index]]);
-//       setValue((value) => [...value, itemTotalCost]);
-//     });
-//   };
-
-
 
 const updateCircularChart = () => {
   let totalEstimate = 0;
@@ -42,6 +17,9 @@ const updateCircularChart = () => {
   let newValues = [];
 
   if (!categoryList || categoryList.length === 0) {
+    setTotalCalulatedEstimate(0); // Ensure the total is updated to 0
+    setValue([1]); // Reset chart values
+    setSliceColor([colors.GRAY]); // Reset colors
     return;
   }
 
@@ -52,7 +30,7 @@ const updateCircularChart = () => {
       item.CategoryItems.forEach((item_) => {
         if (item_.cost && typeof item_.cost === "number") {
           itemTotalCost += item_.cost;
-          totalEstimate += item_.cost;
+          totalEstimate += item_.cost || 0;
         }
       });
     }
@@ -61,14 +39,12 @@ const updateCircularChart = () => {
     newValues.push(itemTotalCost);
   });
 
-  if (totalEstimate === 0) {
-    return;
-  }
-
-  setSliceColor(newSliceColor);
-  setValue(newValues);
+  // Update state even if totalEstimate is 0
   setTotalCalulatedEstimate(totalEstimate);
+  setSliceColor(totalEstimate === 0 ? [colors.GRAY] : newSliceColor);
+  setValue(totalEstimate === 0 ? [1] : newValues);
 };
+
 
 useEffect(() => {
   if (categoryList.length > 0) {

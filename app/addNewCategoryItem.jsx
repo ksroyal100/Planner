@@ -47,44 +47,14 @@ export default function AddNewCategoryItem() {
     }
   };
 
-  //   const onClickAdd = async () => {
-  //   setLoading(true)
-  //     const fileName = Date.now();
-  //     const { data, error } = await supabase.storage
-  //       .from("images")
-  //       .upload(fileName + ".png", decode(image), {
-  //         contentType: "image/png",
-  //       });
-
-  //     if (data) {
-  // const fileUrl = "https://gjlwbqugbiqwrohmgcnr.supabase.co/storage/v1/object/public/images/"+fileName+".png"
-  // const {data,error} = await supabase.from('CategoryItems').insert([{
-  // name:name,
-  // cost:cost,
-  // url:url,
-  // image:fileUrl,
-  // note:note,
-  // category_id:categoryId
-  // }]).select();
-  // ToastAndroid.show('New Item Added!!!',ToastAndroid.SHORT)
-  // setLoading(false)
-  // router.replace({
-  //           pathname: '/category-detail',
-  //           params:{
-  //             categoryId:categoryId
-  //           }
-  //         })
-  //   };
-  //     }
 
   const onClickAdd = async () => {
 setLoading(true)
     const fileName = Date.now();
 
-    // Log the image base64 data to check if it's correct
-    console.log("Uploading image data:", image);
+ 
 
-    // Ensure the image is a valid base64 string
+    // Ensuring the image is a valid base64 string
     if (!image) {
       console.error("No image data available.");
       return;

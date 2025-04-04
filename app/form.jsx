@@ -44,7 +44,6 @@ export default function Form() {
 
     if (data && data.length > 0) {
       const user = data[0];
-      console.log("user", user);
 
       await services.storeData("login", "true");
       await services.storeData("user_email", user.email);
@@ -132,6 +131,7 @@ await  services.storeData("user_name", user.name);
           placeholder="Your Password"
           style={{ fontSize: 17, width: "100%" }}
           onChangeText={(value) => setPassword(value)}
+secureTextEntry
         />
       </View>
 

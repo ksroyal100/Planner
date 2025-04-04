@@ -19,7 +19,7 @@ setUpdateRecord(true)
       <Text style={{ fontFamily: "outfit-bold", fontSize: 20 }}>
         Item List{" "}
       </Text>
-      <View style={{ marginTop: 20 }}>
+      <View style={{ marginTop: 20,backgroundColor:colors.WHITE,padding:10,borderRadius:15 }}>
         {
           categoryData?.CategoryItems?.map((item, index) => (
             <View key={index}>

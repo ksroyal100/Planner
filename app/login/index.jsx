@@ -53,7 +53,9 @@ export default function LoginScreen() {
         >
           Stay on Track, Event by Event: Your Personal Planner App!
         </Text>
-        <TouchableOpacity onPress={()=> router.push('/form')} activeOpacity={0.7}>
+        <TouchableOpacity onPress={()=> router.replace({
+  pathname: "/form"
+})} activeOpacity={0.7}>
           <Text
             style={{
               backgroundColor: "white",
@@ -63,7 +65,6 @@ export default function LoginScreen() {
               fontSize: 25,
               textAlign: "center",
               marginTop: 30,
-              // fontFamily:"outfit-bold"
             }}
           >
             Get Started

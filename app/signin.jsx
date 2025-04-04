@@ -11,6 +11,7 @@ import colors from "../utils/colors";
 import { useRouter } from "expo-router";
 import React from "react";
 import { supabase } from "../utils/SuperbaseConfig";
+import services from "../utils/services";
 
 export default function SignIn() {
   const router = useRouter();
@@ -18,35 +19,50 @@ export default function SignIn() {
   const [password, setPassword] = React.useState();
   const [loading, setLoading] = React.useState(false);
 
-const onClickSignIn= async () =>{
-  setLoading(true);
-  const { data, error } = await supabase
-    .from("Users")
-    .select("*")
-    .eq("email", email)
-    .eq("password", password);
-if (error) {
-  console.error("Error fetching user:", error);
-  ToastAndroid.show("SignIn failed", ToastAndroid.SHORT);
-  setLoading(false);
-}else  {
-  const user = data[0];
-  console.log("user", user);
+const onClickSignIn = async () => {
+  if (!email || !password) {
+    ToastAndroid.show("Please enter email and password", ToastAndroid.SHORT);
+    setLoading(false);
+    return;
+  }
 
-  await services.storeData("login", "true");
-  await services.storeData("user_email", user.email);
-  await services.storeData("user_name", user.name);
-  router.replace({
-    pathname: "/",
-    params: {
-      userId: user.id,
-      email: user.email,
-      name: user.name,
-    },
-  });
-}
-setLoading(false)
-}
+  setLoading(true);
+
+  try {
+    const { data, error } = await supabase
+      .from("Users")
+      .select("id, email, name, password")
+      .eq("email", email)
+      .eq("password", password)
+      .single();
+
+    if (error || !data) {
+      console.error("User not found or incorrect password:", error);
+      ToastAndroid.show("Invalid email or password", ToastAndroid.SHORT);
+      setLoading(false);
+      return;
+    }
+
+    await services.storeData("login", "true");
+    await services.storeData("user_email", data.email);
+    await services.storeData("user_name", data.name);
+
+    router.replace({
+      pathname: "/",
+      params: {
+        userId: data.id,
+        email: data.email,
+        name: data.name,
+      },
+    });
+  } catch (err) {
+    console.error("Unexpected Error:", err);
+    ToastAndroid.show("Something went wrong", ToastAndroid.SHORT);
+  } finally {
+    setLoading(false); 
+  }
+};
+
 
   return (
     <KeyboardAvoidingView style={{padding:20}}>
@@ -97,6 +113,7 @@ setLoading(false)
           placeholder="Your Password"
           style={{ fontSize: 17, width: "100%" }}
           onChangeText={(value) => setPassword(value)}
+secureTextEntry
         />
       </View>
 
