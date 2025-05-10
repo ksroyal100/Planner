@@ -1,108 +1,80 @@
-import { View, Text, StyleSheet } from "react-native";
-import React, { useEffect } from "react";
-import PieChart from "react-native-pie-chart";
-import colors from "../utils/colors";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { PieChart } from "react-native-chart-kit";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import colors from "../utils/colors";
+
+const screenWidth = Dimensions.get("window").width;
 
 export default function CircularChart({ categoryList }) {
-  const widthAndHeight = 150;
-  const [value, setValue] = React.useState([1]);
-  const [sliceColor, setSliceColor] = React.useState([colors.GRAY]);
-const [totalCalculatedEstimate,setTotalCalulatedEstimate] = React.useState(0)
+  const [chartData, setChartData] = useState([]);
+  const [totalEstimate, setTotalEstimate] = useState(0);
 
+  useEffect(() => {
+    prepareChartData();
+  }, [categoryList]);
 
-const updateCircularChart = () => {
-  let totalEstimate = 0;
-  let newSliceColor = [];
-  let newValues = [];
+  const prepareChartData = () => {
+    let total = 0;
+    const data = categoryList.map((category, index) => {
+      let cost = 0;
 
-  if (!categoryList || categoryList.length === 0) {
-    setTotalCalulatedEstimate(0); // Ensure the total is updated to 0
-    setValue([1]); // Reset chart values
-    setSliceColor([colors.GRAY]); // Reset colors
-    return;
-  }
-
-  categoryList.forEach((item, index) => {
-    let itemTotalCost = 0;
-    
-    if (item.CategoryItems && item.CategoryItems.length > 0) {
-      item.CategoryItems.forEach((item_) => {
-        if (item_.cost && typeof item_.cost === "number") {
-          itemTotalCost += item_.cost;
-          totalEstimate += item_.cost || 0;
+      category.CategoryItems?.forEach((item) => {
+        if (typeof item.cost === "number") {
+          cost += item.cost;
         }
       });
+
+      total += cost;
+
+      return {
+        name: category.name,
+        cost,
+        color: colors.COLOR_LIST[index % colors.COLOR_LIST.length],
+        legendFontColor: "#333",
+        legendFontSize: 14,
+      };
+    });
+
+    if (data.length === 0 || total === 0) {
+      setChartData([
+        {
+          name: "NA",
+          cost: 1,
+          color: colors.GRAY,
+          legendFontColor: "#333",
+          legendFontSize: 14,
+        },
+      ]);
+      setTotalEstimate(0);
+    } else {
+      setChartData(data);
+      setTotalEstimate(total);
     }
-
-    newSliceColor.push(colors.COLOR_LIST[index]);
-    newValues.push(itemTotalCost);
-  });
-
-  // Update state even if totalEstimate is 0
-  setTotalCalulatedEstimate(totalEstimate);
-  setSliceColor(totalEstimate === 0 ? [colors.GRAY] : newSliceColor);
-  setValue(totalEstimate === 0 ? [1] : newValues);
-};
-
-
-useEffect(() => {
-  if (categoryList.length > 0) {
-    updateCircularChart();
-  }
-}, [categoryList]); 
-
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 20, fontFamily: "outfit" }}>
-        Total Estimate: <Text style={{ fontFamily: "outfit-bold" }}>₹{totalCalculatedEstimate}</Text>
+      <Text style={styles.headerText}>
+        Total Estimate: <Text style={styles.bold}>₹{totalEstimate}</Text>
       </Text>
-      <View style={styles.subcontainer}>
-        <PieChart
-          widthAndHeight={widthAndHeight}
-          series={value}
-          sliceColor={sliceColor}
-          coverRadius={0.65}
-          coverFill={"#fff"}
-        />
-        {categoryList.length == 0 ? 
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: 5,
-              marginTop: 10,
-            }}
-          >
-            <MaterialCommunityIcons
-              name="checkbox-blank-circle"
-              size={24}
-              color={colors.GRAY}
-            />
-            <Text>NA</Text>
-          </View>
-         : 
-          <View>
-{categoryList.map((category,index)=>(
-<View key={index} style={{
-              display: "flex",
-              flexDirection: "row",
-              // gap: 5,
-              marginTop: 8,
-marginRight:10
-            }}>
- <MaterialCommunityIcons
-              name="checkbox-blank-circle"
-              size={24}
-              color={colors.COLOR_LIST[index]}
-            />
-            <Text>{category.name}</Text>
-</View>
-))}
-</View>
-        }
-      </View>
+
+      <PieChart
+        data={chartData}
+        width={screenWidth - 60}
+        height={220}
+        chartConfig={{
+          color: () => `#000`,
+          backgroundColor: "#fff",
+          backgroundGradientFrom: "#fff",
+          backgroundGradientTo: "#fff",
+        }}
+        accessor={"cost"}
+        backgroundColor={"transparent"}
+        paddingLeft={"15"}
+        center={[0, 0]}
+        absolute
+      />
     </View>
   );
 }
@@ -115,10 +87,20 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     elevation: 1,
   },
-  subcontainer: {
-    display: "flex",
-    marginTop: 20,
+  headerText: {
+    fontSize: 20,
+    fontFamily: "outfit",
+  },
+  bold: {
+    fontFamily: "outfit-bold",
+  },
+  legendRow: {
     flexDirection: "row",
-    gap: 50,
+    alignItems: "center",
+    marginTop: 8,
+  },
+  legendText: {
+    marginLeft: 8,
+    fontSize: 14,
   },
 });

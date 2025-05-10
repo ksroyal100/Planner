@@ -139,7 +139,7 @@ setLoading(true)
           <Ionicons name="pricetag" size={24} color="gray" />
           <TextInput
             placeholder="Item Name"
-            style={{ fontSize: 17, width: "100%" }}
+            style={{ fontSize: 17, width: "100%" , height: 40}}
             onChangeText={(value) => setName(value)}
           />
         </View>
@@ -159,7 +159,7 @@ setLoading(true)
           <FontAwesome name="rupee" size={24} color="gray" />
           <TextInput
             placeholder="Cost"
-            style={{ fontSize: 17, width: "100%" }}
+            style={{ fontSize: 17, width: "100%" , height: 40}}
             keyboardType="number-pad"
             onChangeText={(value) => setCost(value)}
           />
@@ -180,7 +180,7 @@ setLoading(true)
           <Feather name="link-2" size={24} color="gray" />
           <TextInput
             placeholder="Url"
-            style={{ fontSize: 17, width: "100%" }}
+            style={{ fontSize: 17, width: "100%", height: 40  }}
             onChangeText={(value) => setUrl(value)}
           />
         </View>
@@ -200,7 +200,7 @@ setLoading(true)
           <FontAwesome name="pencil-square-o" size={24} color="gray" />
           <TextInput
             placeholder="Note"
-            style={{ fontSize: 17, width: "100%" }}
+            style={{ fontSize: 17, width: "100%", height: 70  }}
             numberOfLines={4}
             onChangeText={(value) => setNote(value)}
           />

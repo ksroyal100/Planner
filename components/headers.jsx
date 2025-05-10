@@ -1,7 +1,6 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import colors from '../utils/colors';
-import {Ionicons } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import services from '../utils/services';
 import { useRouter } from 'expo-router';
@@ -51,7 +50,6 @@ const handleLogout = async () => {
         </View>
 
 <TouchableOpacity onPress={handleLogout}>
-        {/* <Ionicons style={{marginRight:"10"}} name='notifications' size={24} color={colors.WHITE} /> */}
 <FontAwesome name="power-off" size={24} color={colors.WHITE}  />
 </TouchableOpacity>
 

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import login from "../assets/images/loginimg.png";
+import login from "../assets/images/starter.png";
 import Colors from "../utils/colors";
 import { useRouter } from "expo-router";
 
@@ -27,7 +27,7 @@ export default function LoginScreen() {
           width: "100%",
           height: "100%",
           padding: 20,
-          marginTop: -10,
+          marginTop: 30,
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
         }}
@@ -77,8 +77,8 @@ export default function LoginScreen() {
 
 const style = StyleSheet.create({
   bgimage: {
-    width: 400,
-    height: 400,
-    marginTop: 20,
+    width: 340,
+    height: 340,
+    marginTop: 60,
   },
 });

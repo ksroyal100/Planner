@@ -5,13 +5,13 @@
     "version": "1.0.0",
     "scheme": "Planner",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/starter.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/images/starter.png",
       "resizeMode": "contain",
-      "backgroundColor": "#2f7bf5"
+      "backgroundColor": "#fff"
     },
     "ios": {
       "supportsTablet": true,
@@ -20,13 +20,13 @@
     "android": {
 
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/starter.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.ks_royal.planner"
     },
     "web": {
-      "favicon": "./assets/favicon.png",
+      "favicon": "./assets/images/starter.png",
       "bundler": "metro"
     },
     "plugins": [

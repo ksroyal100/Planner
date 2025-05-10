@@ -92,7 +92,7 @@ const onClickSignIn = async () => {
       >
         <TextInput
           placeholder="Your Email Address"
-          style={{ fontSize: 17, width: "100%" }}
+          style={{ fontSize: 17, width: "100%",height: 40  }}
           onChangeText={(value) => setEmail(value)}
         />
       </View>
@@ -111,7 +111,7 @@ const onClickSignIn = async () => {
       >
         <TextInput
           placeholder="Your Password"
-          style={{ fontSize: 17, width: "100%" }}
+          style={{ fontSize: 17, width: "100%",height: 40  }}
           onChangeText={(value) => setPassword(value)}
 secureTextEntry
         />

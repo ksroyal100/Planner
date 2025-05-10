@@ -89,7 +89,7 @@ email: Lemail,
           maxLength={8}
           onChangeText={(value) => setCategoryName(value)}
           placeholder="Category Name"
-          style={{ width: "100%", fontSize: 20 }}
+          style={{ width: "100%",height: 50, fontSize: 20 }}
         />
       </View>
       <View style={styles.inputView}>
@@ -98,7 +98,7 @@ email: Lemail,
           placeholder="Total Bugdet"
           onChangeText={(value) => setTotalBudget(value)}
           keyboardType="numeric"
-          style={{ width: "100%", fontSize: 20 }}
+          style={{ width: "100%", height: 50 , fontSize: 20 }}
         />
       </View>
 

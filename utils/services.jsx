@@ -14,13 +14,14 @@ const storeData = async (key, value) => {
 };
 
 const getData = async (key) => {
-    try {
-        const value = await AsyncStorage.getItem(key);
-        return value ? JSON.parse(value) : null; 
-    } catch (e) {
-        console.error(`Error retrieving data for key: ${key}`, e);
-        return null;
-    }
+  try {
+    const value = await AsyncStorage.getItem(key);
+    const parsed = value ? JSON.parse(value) : null;
+    return parsed;
+  } catch (e) {
+    console.error(`Error retrieving data for key: ${key}`, e);
+    return null;
+  }
 };
 
 export default { storeData, getData };
