@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import login from "../../assets/images/loginimg.png";
-import Colors from "../../utils/colors.jsx";
+import login from "../assets/images/loginimg.png";
+import Colors from "../utils/colors";
 import { useRouter } from "expo-router";
 
 export default function LoginScreen() {

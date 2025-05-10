@@ -24,7 +24,7 @@ const handleLogout = async () => {
     console.log("Logging out...");
 
     setTimeout(() => {
-        router.replace("/login");
+        router.replace("/home");
     }, 100);
 };
 

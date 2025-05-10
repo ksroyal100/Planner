@@ -104,7 +104,6 @@ setLoading(true)
           categoryId: categoryId,
         },
       });
-      console.log("Item added successfully with categoryId:", categoryId);
     } catch (error) {
       console.error("An error occurred:", error);
     }

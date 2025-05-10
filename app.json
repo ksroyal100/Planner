@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Planner",
-    "slug": "Planner",
+    "slug": "planner",
     "version": "1.0.0",
     "scheme": "Planner",
     "orientation": "portrait",
@@ -14,13 +14,16 @@
       "backgroundColor": "#2f7bf5"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "ksroyal1010"
     },
     "android": {
+
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ks_royal.planner"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -30,6 +33,15 @@
       "expo-font",
       "expo-router",
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "8d39e076-dd83-4ff3-9900-39c56d724958"
+      }
+    },
+    "owner": "ks_royal"
   }
 }

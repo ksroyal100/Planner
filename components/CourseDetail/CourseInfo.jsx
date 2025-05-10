@@ -53,7 +53,7 @@ export default function CourseInfo({ categoryData }) {
 
           ToastAndroid.show("Category deleted!", ToastAndroid.SHORT);
 
-          router.replace("/(tabs)");
+          router.replace("/home");
         },
       },
     ]);

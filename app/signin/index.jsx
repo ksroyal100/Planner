@@ -7,11 +7,11 @@ import {
   ToastAndroid,
   ActivityIndicator,
 } from "react-native";
-import colors from "../utils/colors";
+import colors from "../../utils/colors";
 import { useRouter } from "expo-router";
 import React from "react";
-import { supabase } from "../utils/SuperbaseConfig";
-import services from "../utils/services";
+import { supabase } from "../../utils/SuperbaseConfig";
+import services from "../../utils/services";
 
 export default function SignIn() {
   const router = useRouter();
@@ -48,7 +48,7 @@ const onClickSignIn = async () => {
     await services.storeData("user_name", data.name);
 
     router.replace({
-      pathname: "/",
+      pathname: "/home",
       params: {
         userId: data.id,
         email: data.email,

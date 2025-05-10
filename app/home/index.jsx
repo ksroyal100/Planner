@@ -7,8 +7,8 @@ import {
   Text,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import NetInfo from "@react-native-community/netinfo"; // Import NetInfo for network status
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import NetInfo from "@react-native-community/netinfo"; 
+import { Link, useRouter } from "expo-router";
 import services from "../../utils/services";
 import { supabase } from "../../utils/SuperbaseConfig";
 import Headers from "../../components/headers";
@@ -16,14 +16,19 @@ import colors from "../../utils/colors";
 import CircularChart from "../../components/circularChart";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CategoryList from "../../components/CategoryList";
+import ProtectedRoute from "../../components/ProtectedRoute";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+
+
 
 export default function Home() {
   const router = useRouter();
   const [categoryList, setCategoryList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(true); // Track internet status
-  const [email, setEmail] = useState(""); // Store user email
-  const { email: routeEmail } = useLocalSearchParams();
+
+const { email,setEmail } = useContext(AuthContext);
 
   useEffect(() => {
     // Fetch initial internet connection status
@@ -55,12 +60,11 @@ export default function Home() {
     const storedEmail = await services.getData("user_email");
 
     if (!result || result !== "true") {
-      router.replace("/login");
+      router.replace("/");
     } else {
-      if (!routeEmail && storedEmail) {
-        setEmail(storedEmail);
-router.replace("/");
-      }
+      if (storedEmail) {
+        setEmail(storedEmail);     
+ }
     }
   };
 
@@ -86,6 +90,7 @@ router.replace("/");
   };
 
   return (
+<ProtectedRoute>
     <View style={{ marginTop: 30, flex: 1 }}>
       {/* No Internet Connection Warning */}
       {!isConnected && (
@@ -115,6 +120,7 @@ router.replace("/");
         <Ionicons name="add-circle" size={64} color={colors.PRIMARY} />
       </Link>
     </View>
+</ProtectedRoute>
   );
 }
 

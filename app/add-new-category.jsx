@@ -27,7 +27,6 @@ export default function AddNewCategory() {
 
   const onCreateCategory = async () => {
   const Lemail = await services.getData("user_email")
-console.log("Lemail",Lemail)
 
     setLoading(true);
     try {
@@ -49,7 +48,7 @@ console.log("Lemail",Lemail)
         return { success: false, error };
       }
       router.replace({
-        pathname: "/",
+        pathname: "/home",
         params: {
           categoryId: data[0].id,
 email: Lemail,
