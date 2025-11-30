@@ -121,9 +121,6 @@ Add notifications: Email or push reminders for due tasks.
 Implement analytics: Show user stats (tasks completed, upcoming tasks).
 
 
-Dark mode: For better night-time usage.
-
-
 
 🤝 Contributing
 I welcome contributions! If you want to:
@@ -139,46 +136,6 @@ Make your changes
 
 
 Open a pull request — I will review and merge
-
-
-
-📫 Contact Me
-
-
-GitHub: ksroyal100
-
-
-Email: (your email here)
-
-
-LinkedIn: (your LinkedIn profile)
-
-
-
-📜 License
-This project is licensed under the MIT License — see the LICENSE file for details.
-
-Thank you for checking out Planner!
-I built this because I’m passionate about productivity tools — and I hope you find it useful too.
-
----
-
-### 💬 Why This README Works for Recruiters:
-
-1. **Clear Project Description**: Right at the top, recruiters understand what the project is. :contentReference[oaicite:0]{index=0}  
-2. **Motivation / Problem Statement**: Shows you built it with a purpose – not just for practice. This adds depth. :contentReference[oaicite:1]{index=1}  
-3. **Features List**: Helps recruiters quickly scan what you’ve built.  
-4. **Tech Stack**: Gives insight into your skills and tools you’re comfortable with.  
-5. **Installation & Usage Instructions**: Demonstrates that you care about usability and documentation. :contentReference[oaicite:2]{index=2}  
-6. **Learning + Challenges**: This is great – it highlights growth, problem-solving, and self-reflection.  
-7. **Roadmap / Future Work**: Shows you’re thinking ahead and planning more features.  
-8. **Contribution Guidelines**: Encourages collaboration and open-source mindset.  
-9. **Contact Info**: Makes it easy for recruiters or other devs to reach out. :contentReference[oaicite:3]{index=3}  
-
----
-
-If you like, I can **generate a README.md with badges (build status, license, etc.)** and **screenshots layout** (you can later add actual screenshots). Do you want me to do that?
-::contentReference[oaicite:4]{index=4}
 
 
 1. **Clone the repo**  
