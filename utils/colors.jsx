@@ -1,14 +1,10 @@
 export default{
-    PRIMARY:"#2f7bf5",
-    BLACK: "#000",
-    VOILET:"#8B42FC",
-    WHITE:"#fff",
-    YELLOW:"#fbd203",
-    LIGHT_GRAY:"#f2f2f2",
-    GRAY:"#808080",
-    RED:"#ff0000",
-    GREEN:"#008000",
-    SECONDARY:"#ff1493",
-    ORANGE:"#ff8c00",
-    COLOR_LIST : ["#8B42FC","#fbd203","#ff0000","#008000","#ff8c00","#ff1493"]
+    PRIMARY: "#4C6FFF",
+  BG: "#F4F6FA",
+  CARD_BG: "rgba(255,255,255,0.18)",
+  WHITE: "#FFFFFF",
+  TEXT_DARK: "#1A1A1A",
+  TEXT_LIGHT: "#6F6F6F",
+  GRAY: "#E6E8EC",
+  COLOR_LIST: ["#6C63FF", "#FF6584", "#2AB7CA", "#FED766", "#4CAF50"],
 }

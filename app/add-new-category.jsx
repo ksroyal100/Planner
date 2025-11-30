@@ -3,22 +3,24 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  TouchableOpacity,
-  ToastAndroid,
+  Pressable,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import colors from "../utils/colors";
 import ColorPicker from "../components/ColorPicker";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { supabase } from "../utils/SuperbaseConfig";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import services from "../utils/services";
 
 export default function AddNewCategory() {
   const [selectedIcons, setSelectedIcons] = React.useState("IC");
-  const [selectColor, setSelectColor] = React.useState(colors.YELLOW);
+  const [selectColor, setSelectColor] = React.useState(colors.PRIMARY);
   const [categoryName, setCategoryName] = React.useState();
   const [totalBudget, setTotalBudget] = React.useState();
   const [loading, setLoading] = React.useState(false);
@@ -26,9 +28,9 @@ export default function AddNewCategory() {
   const router = useRouter();
 
   const onCreateCategory = async () => {
-  const Lemail = await services.getData("user_email")
-
+    const Lemail = await services.getData("user_email");
     setLoading(true);
+
     try {
       const { data, error } = await supabase
         .from("Category")
@@ -45,106 +47,164 @@ export default function AddNewCategory() {
 
       if (error) {
         console.log("Error:", error);
-        return { success: false, error };
+        setLoading(false);
+        return;
       }
-      router.replace({
-        pathname: "/home",
-        params: {
-          categoryId: data[0].id,
-email: Lemail,
-        },
-      });
-      ToastAndroid.show("Category Added Successfully", ToastAndroid.SHORT);
+
       setLoading(false);
-      return { success: true, data };
+      router.replace("/home");
     } catch (err) {
-      console.error("Unexpected Error:", err);
-      return { success: false, error: err };
+      console.log("Error:", err);
+      setLoading(false);
     }
   };
 
   return (
-    <View style={{ marginTop: 20, padding: 20 }}>
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.container}
       >
-        <TextInput
-          style={[styles.iconInput, { backgroundColor: selectColor }]}
-          maxLength={2}
-          onChangeText={(value) => setSelectedIcons(value)}
-        >
-          {selectedIcons}
-        </TextInput>
-        <ColorPicker
-          selectColor={selectColor}
-          setSelectColor={(color) => setSelectColor(color)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <MaterialIcons name="local-offer" size={24} color={colors.GRAY} />
-        <TextInput
-          maxLength={8}
-          onChangeText={(value) => setCategoryName(value)}
-          placeholder="Category Name"
-          style={{ width: "100%",height: 50, fontSize: 20 }}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <FontAwesome name="rupee" size={24} color={colors.GRAY} />
-        <TextInput
-          placeholder="Total Bugdet"
-          onChangeText={(value) => setTotalBudget(value)}
-          keyboardType="numeric"
-          style={{ width: "100%", height: 50 , fontSize: 20 }}
-        />
-      </View>
+        {/* <Text style={styles.heading}>Create New Category</Text> */}
 
-      <TouchableOpacity
-        onPress={() => onCreateCategory()}
-        style={{
-          backgroundColor: colors.PRIMARY,
-          padding: 10,
-          marginTop: 20,
-          borderRadius: 10,
-        }}
-        disabled={!categoryName || !totalBudget || loading}
-      >
-        {loading ? (
-          <ActivityIndicator color={colors.WHITE} />
-        ) : (
-          <Text
-            style={{ textAlign: "center", color: colors.WHITE, fontSize: 20 }}
+        <View style={styles.iconWrapper}>
+          <TextInput
+            style={[styles.iconInput, { backgroundColor: selectColor }]}
+            maxLength={2}
+            onChangeText={(value) => setSelectedIcons(value)}
           >
-            Add Category
-          </Text>
-        )}
-      </TouchableOpacity>
-    </View>
+            {selectedIcons}
+          </TextInput>
+
+          <View style={styles.pickerBox}>
+            <ColorPicker
+              selectColor={selectColor}
+              setSelectColor={(color) => setSelectColor(color)}
+            />
+          </View>
+        </View>
+
+        {/* INPUTS */}
+        <View style={styles.inputCard}>
+          <MaterialIcons name="local-offer" size={22} color={colors.TEXT_LIGHT} />
+          <TextInput
+            placeholder="Category Name"
+            maxLength={15}
+            onChangeText={(value) => setCategoryName(value)}
+            style={styles.inputField}
+            placeholderTextColor={colors.TEXT_LIGHT}
+          />
+        </View>
+
+        <View style={styles.inputCard}>
+          <FontAwesome name="rupee" size={22} color={colors.TEXT_LIGHT} />
+          <TextInput
+            placeholder="Total Budget"
+            keyboardType="numeric"
+            onChangeText={(value) => setTotalBudget(value)}
+            style={styles.inputField}
+            placeholderTextColor={colors.TEXT_LIGHT}
+          />
+        </View>
+
+        {/* BUTTON */}
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            pressed && { opacity: 0.8 },
+          ]}
+          onPress={onCreateCategory}
+          disabled={!categoryName || !totalBudget || loading}
+        >
+          {loading ? (
+            <ActivityIndicator color={colors.WHITE} />
+          ) : (
+            <Text style={styles.buttonText}>Add Category</Text>
+          )}
+        </Pressable>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    paddingBottom: 80,
+  },
+
+  heading: {
+    fontSize: 28,
+    fontFamily: "outfit-bold",
+    marginBottom: 25,
+    textAlign: "center",
+    color: colors.TEXT_DARK,
+  },
+
+  iconWrapper: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   iconInput: {
     textAlign: "center",
-    fontSize: 30,
-    padding: 20,
-    borderRadius: 99,
-    paddingHorizontal: 28,
+    fontSize: 34,
+    width: 110,
+    height: 110,
+    textAlignVertical: "center",
+    borderRadius: 25,
     color: colors.WHITE,
+    fontFamily: "outfit-bold",
+    marginBottom: 15,
+    elevation: 5,
   },
-  inputView: {
+
+  pickerBox: {
+    width: "95%",
+    backgroundColor: "rgba(255,255,255,0.15)",
+    padding: 18,
+    borderRadius: 20,
+    marginTop: 10,
+    borderColor: "rgba(255,255,255,0.25)",
     borderWidth: 1,
-    display: "flex",
+  },
+
+  inputCard: {
     flexDirection: "row",
-    gap: 5,
-    padding: 8,
-    borderRadius: 10,
-    borderColor: colors.GRAY,
-    backgroundColor: colors.WHITE,
     alignItems: "center",
+    gap: 10,
+    padding: 15,
+    borderRadius: 16,
+    backgroundColor: "rgba(255,255,255,0.9)",
+    borderWidth: 1,
+    borderColor: "#E6E6E6",
     marginTop: 20,
+    elevation: 2,
+  },
+
+  inputField: {
+    fontSize: 18,
+    flex: 1,
+    fontFamily: "outfit",
+    color: colors.TEXT_DARK,
+  },
+
+  button: {
+    marginTop: 35,
+    backgroundColor: colors.PRIMARY,
+    paddingVertical: 15,
+    borderRadius: 14,
+    alignItems: "center",
+    elevation: 3,
+  },
+
+  buttonText: {
+    color: colors.WHITE,
+    fontSize: 20,
+    fontFamily: "outfit",
   },
 });
+

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { PieChart } from "react-native-chart-kit";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
 import colors from "../utils/colors";
 
 const screenWidth = Dimensions.get("window").width;
@@ -16,6 +16,7 @@ export default function CircularChart({ categoryList }) {
 
   const prepareChartData = () => {
     let total = 0;
+
     const data = categoryList.map((category, index) => {
       let cost = 0;
 
@@ -29,7 +30,7 @@ export default function CircularChart({ categoryList }) {
 
       return {
         name: category.name,
-        cost,
+        cost: cost,
         color: colors.COLOR_LIST[index % colors.COLOR_LIST.length],
         legendFontColor: "#333",
         legendFontSize: 14,
@@ -46,61 +47,110 @@ export default function CircularChart({ categoryList }) {
           legendFontSize: 14,
         },
       ]);
+
       setTotalEstimate(0);
-    } else {
-      setChartData(data);
-      setTotalEstimate(total);
+      return;
     }
+
+    setChartData(data);
+    setTotalEstimate(total);
   };
 
   return (
-    <View style={styles.container}>
+    <BlurView intensity={70} tint="light" style={styles.chartCard}>
       <Text style={styles.headerText}>
         Total Estimate: <Text style={styles.bold}>₹{totalEstimate}</Text>
       </Text>
 
       <PieChart
-        data={chartData}
-        width={screenWidth - 60}
-        height={220}
+        data={chartData.map((item) => ({
+          name: item.name,
+          population: item.cost,
+          color: item.color,
+          legendFontColor: "#333",
+          legendFontSize: 14,
+        }))}
+        width={screenWidth - 40}
+        height={210}
         chartConfig={{
-          color: () => `#000`,
-          backgroundColor: "#fff",
-          backgroundGradientFrom: "#fff",
-          backgroundGradientTo: "#fff",
+          color: () => "white",
         }}
-        accessor={"cost"}
-        backgroundColor={"transparent"}
-        paddingLeft={"15"}
-        center={[0, 0]}
-        absolute
+        accessor="population"
+        backgroundColor="transparent"
+        paddingLeft="40"
+        hasLegend={false} 
       />
-    </View>
+
+      <View style={styles.legendContainer}>
+        {chartData.map((item, index) => (
+          <View key={index} style={styles.legendRow}>
+            <View
+              style={[styles.legendDot, { backgroundColor: item.color }]}
+            />
+
+            <Text style={styles.legendLabel} numberOfLines={1}>
+              {item.name}
+            </Text>
+
+            <Text style={styles.legendValue}>₹{item.cost}</Text>
+          </View>
+        ))}
+      </View>
+    </BlurView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 20,
-    backgroundColor: colors.WHITE,
-    padding: 20,
-    borderRadius: 15,
-    elevation: 1,
+  chartCard: {
+    backgroundColor: "rgba(146, 151, 219, 0.15)",
+    borderRadius: 20,
+    borderColor: "rgba(48, 56, 121, 0.25)",
+    borderWidth: 1,
+    padding: 15,
+    marginHorizontal: 15,
+    marginTop: -15,
+    overflow: "hidden",
   },
+
   headerText: {
-    fontSize: 20,
+    fontSize: 22,
     fontFamily: "outfit",
+    marginBottom: 10,
   },
+
   bold: {
     fontFamily: "outfit-bold",
   },
+
+  legendContainer: {
+    width: "100%",
+    marginTop: 10,
+  },
+
   legendRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 8,
+    justifyContent: "space-between",
+    marginVertical: 4,
   },
-  legendText: {
+
+  legendDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+
+  legendLabel: {
+    flex: 1,
     marginLeft: 8,
+    fontSize: 16,
+    color: "#333",
+    flexShrink: 1,
+  },
+
+  legendValue: {
     fontSize: 14,
+    fontWeight: "700",
+    marginLeft: 8,
   },
 });

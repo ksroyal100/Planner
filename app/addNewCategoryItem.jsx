@@ -6,26 +6,32 @@ import {
   TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
-  ToastAndroid,
+  Platform,
+  StyleSheet,
   ActivityIndicator,
+  ToastAndroid,
 } from "react-native";
 import colors from "../utils/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Feather from "@expo/vector-icons/Feather";
 import * as ImagePicker from "expo-image-picker";
+import { BlurView } from "expo-blur";
+
 import { supabase } from "../utils/SuperbaseConfig";
-import { decode } from 'base64-arraybuffer'
+import { decode } from "base64-arraybuffer";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 
 const placeholder =
   "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png";
+
 export default function AddNewCategoryItem() {
   const [image, setImage] = React.useState(placeholder);
   const [previewImage, setPreviewImage] = React.useState(placeholder);
   const { categoryId } = useLocalSearchParams();
   const router = useRouter();
+
   const [name, setName] = React.useState();
   const [url, setUrl] = React.useState();
   const [cost, setCost] = React.useState();
@@ -34,9 +40,8 @@ export default function AddNewCategoryItem() {
 
   const onImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images", "videos"],
-      allowsEditing: false,
-      // aspect: [4, 3],
+      mediaTypes: ["images"],
+      allowsEditing: true,
       quality: 1,
       base64: true,
     });
@@ -47,190 +52,200 @@ export default function AddNewCategoryItem() {
     }
   };
 
-
   const onClickAdd = async () => {
-setLoading(true)
+    setLoading(true);
     const fileName = Date.now();
 
- 
-
-    // Ensuring the image is a valid base64 string
-    if (!image) {
-      console.error("No image data available.");
-      return;
-    }
-
     try {
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from("images")
         .upload(fileName + ".png", decode(image), {
           contentType: "image/png",
         });
 
       if (error) {
-        console.error("Error uploading image:", error);
+        console.error("Upload Error:", error);
         return;
       }
 
-      // If the image upload is successful, insert into the database
-      const fileUrl =
-        "https://gjlwbqugbiqwrohmgcnr.supabase.co/storage/v1/object/public/images/" +
-        fileName +
-        ".png";
+      const fileUrl = `https://gjlwbqugbiqwrohmgcnr.supabase.co/storage/v1/object/public/images/${fileName}.png`;
 
-      const { data: insertData, error: insertError } = await supabase
-        .from("CategoryItems")
-        .insert([
-          {
-            name: name,
-            cost: cost,
-            url: url,
-            image: fileUrl,
-            note: note,
-            category_id: categoryId,
-          },
-        ])
-        .select();
+      const { error: insertError } = await supabase.from("CategoryItems").insert([
+        {
+          name,
+          cost,
+          url,
+          image: fileUrl,
+          note,
+          category_id: categoryId,
+        },
+      ]);
 
       if (insertError) {
-        console.error("Error inserting data into CategoryItems:", insertError);
+        console.error("Insert Error:", insertError);
         return;
       }
 
-      ToastAndroid.show("New Item Added!!!", ToastAndroid.SHORT);
+      ToastAndroid.show("Item Added!", ToastAndroid.SHORT);
+
       router.replace({
         pathname: "/category-detail",
-        params: {
-          categoryId: categoryId,
-        },
+        params: { categoryId },
       });
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <KeyboardAvoidingView>
-      <ScrollView style={{ padding: 20 }}>
-        <TouchableOpacity onPress={() => onImagePicker()}>
-          <Image
-            source={{ uri: previewImage }}
-            style={{
-              width: 150,
-              height: 150,
-              backgroundColor: colors.GRAY,
-              borderRadius: 15,
-            }}
-          />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* IMAGE PICKER */}
+        <TouchableOpacity style={styles.imageWrapper} onPress={onImagePicker}>
+          <BlurView intensity={50} tint="light" style={styles.imageBlur}>
+            <Image source={{ uri: previewImage }} style={styles.image} />
+          </BlurView>
         </TouchableOpacity>
-        <View
-          style={{
-            padding: 10,
-            borderWidth: 1,
-            display: "flex",
-            flexDirection: "row",
-            marginTop: 20,
-            gap: 5,
-            alignItems: "center",
-            borderColor: colors.GRAY,
-            borderRadius: 10,
-          }}
-        >
-          <Ionicons name="pricetag" size={24} color="gray" />
+
+        {/* FORM FIELDS */}
+        <View style={styles.inputWrapper}>
+          <Ionicons name="pricetag" size={22} color={colors.TEXT_LIGHT} />
           <TextInput
             placeholder="Item Name"
-            style={{ fontSize: 17, width: "100%" , height: 40}}
-            onChangeText={(value) => setName(value)}
+            placeholderTextColor={colors.TEXT_LIGHT}
+            style={styles.input}
+            onChangeText={setName}
           />
         </View>
-        <View
-          style={{
-            padding: 10,
-            borderWidth: 1,
-            display: "flex",
-            flexDirection: "row",
-            marginTop: 20,
-            gap: 5,
-            alignItems: "center",
-            borderColor: colors.GRAY,
-            borderRadius: 10,
-          }}
-        >
-          <FontAwesome name="rupee" size={24} color="gray" />
+
+        <View style={styles.inputWrapper}>
+          <FontAwesome name="rupee" size={22} color={colors.TEXT_LIGHT} />
           <TextInput
             placeholder="Cost"
-            style={{ fontSize: 17, width: "100%" , height: 40}}
+            placeholderTextColor={colors.TEXT_LIGHT}
             keyboardType="number-pad"
-            onChangeText={(value) => setCost(value)}
+            style={styles.input}
+            onChangeText={setCost}
           />
         </View>
-        <View
-          style={{
-            padding: 10,
-            borderWidth: 1,
-            display: "flex",
-            flexDirection: "row",
-            marginTop: 20,
-            gap: 5,
-            alignItems: "center",
-            borderColor: colors.GRAY,
-            borderRadius: 10,
-          }}
-        >
-          <Feather name="link-2" size={24} color="gray" />
+
+        <View style={styles.inputWrapper}>
+          <Feather name="link-2" size={22} color={colors.TEXT_LIGHT} />
           <TextInput
-            placeholder="Url"
-            style={{ fontSize: 17, width: "100%", height: 40  }}
-            onChangeText={(value) => setUrl(value)}
+            placeholder="Url (Optional)"
+            placeholderTextColor={colors.TEXT_LIGHT}
+            style={styles.input}
+            onChangeText={setUrl}
           />
         </View>
-        <View
-          style={{
-            padding: 10,
-            borderWidth: 1,
-            display: "flex",
-            flexDirection: "row",
-            marginTop: 20,
-            gap: 5,
-            alignItems: "center",
-            borderColor: colors.GRAY,
-            borderRadius: 10,
-          }}
-        >
-          <FontAwesome name="pencil-square-o" size={24} color="gray" />
+
+        <View style={[styles.inputWrapper, { height: 120, alignItems: "flex-start" }]}>
+          <FontAwesome name="pencil-square-o" size={22} color={colors.TEXT_LIGHT} />
           <TextInput
             placeholder="Note"
-            style={{ fontSize: 17, width: "100%", height: 70  }}
-            numberOfLines={4}
-            onChangeText={(value) => setNote(value)}
+            placeholderTextColor={colors.TEXT_LIGHT}
+            style={[styles.input, { height: "100%", textAlignVertical: "top" }]}
+            multiline
+            onChangeText={setNote}
           />
         </View>
+
+        {/* BUTTON */}
         <TouchableOpacity
-          style={{
-            padding: 15,
-            backgroundColor: colors.PRIMARY,
-            borderRadius: 99,
-            marginTop: 25,
-          }}
+          style={[
+            styles.button,
+            (!name || !cost || loading) && { opacity: 0.6 },
+          ]}
           disabled={!name || !cost || loading}
-          onPress={() => onClickAdd()}
+          onPress={onClickAdd}
         >
           {loading ? (
             <ActivityIndicator color={colors.WHITE} />
           ) : (
-            <Text
-              style={{
-                color: colors.WHITE,
-                textAlign: "center",
-                fontFamily: "outfit",
-                fontSize: 20,
-              }}
-            >
-              Add
-            </Text>
+            <Text style={styles.buttonText}>Add Item</Text>
           )}
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+
+  imageWrapper: {
+    alignSelf: "center",
+    width: 160,
+    height: 160,
+    borderRadius: 22,
+    overflow: "hidden",
+    marginBottom: 25,
+  },
+
+  imageBlur: {
+    flex: 1,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.15)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.35)",
+    borderRadius: 22,
+  },
+
+  image: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 18,
+    borderWidth:2,
+    borderColor: "rgba(31, 26, 26, 0.25)",
+    
+  },
+
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 16,
+    padding: 14,
+    marginTop: 18,
+    borderWidth: 1,
+    borderColor: "rgba(31, 26, 26, 0.25)",
+    backgroundColor: "rgba(255,255,255,0.15)",
+    overflow: "hidden",
+  },
+
+  input: {
+    fontSize: 15,
+    marginLeft: 10,
+    flex: 1,
+    color: colors.TEXT_DARK,
+  },
+
+  button: {
+    backgroundColor: colors.PRIMARY,
+    padding: 15,
+    borderRadius: 99,
+    marginTop: 30,
+    shadowColor: colors.PRIMARY,
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 5,
+  },
+
+  buttonText: {
+    color: colors.WHITE,
+    fontSize: 19,
+    textAlign: "center",
+    fontWeight: "600",
+  },
+});

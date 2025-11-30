@@ -59,7 +59,7 @@ export default function Home() {
         setEmail(storedEmail);
       }
     } catch (e) {
-      console.log("Auth check error:", e);
+      console.log("Auth check error:", e); 
     }
   };
 
@@ -99,58 +99,87 @@ export default function Home() {
     );
   }
 
-  return (
-    <ProtectedRoute>
-      <View style={{ marginTop: 30, flex: 1 }}>
-        {!isConnected && (
-          <View style={styles.noInternet}>
-            <Ionicons name="wifi-off" size={24} color="white" />
-            <Text style={styles.noInternetText}>No Internet Connection</Text>
-          </View>
-        )}
+ return (
+<ProtectedRoute>
+  <View style={{ flex: 1, backgroundColor: "transparent" }}>
+      
+      {!isConnected && (
+        <View style={styles.noInternet}>
+          <Ionicons name="wifi-off" size={24} color="white" />
+          <Text style={styles.noInternetText}>No Internet Connection</Text>
+        </View>
+      )}
 
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl onRefresh={getCategoryList} refreshing={loading} />
-          }
-        >
-          <View
-            style={{ padding: 20, backgroundColor: colors.PRIMARY, height: 150 }}
-          >
-            <Headers />
-          </View>
-          <View style={{ padding: 20, marginTop: -75 }}>
-            <CircularChart categoryList={categoryList} />
-            <CategoryList categoryList={categoryList} />
-          </View>
-        </ScrollView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ backgroundColor: "transparent" }}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={getCategoryList} />
+        }
+      >
+        <View style={styles.headerWrapper}>
+          <Headers />
+        </View>
 
-        <Link href={"/add-new-category"} style={styles.container}>
-          <Ionicons name="add-circle" size={64} color={colors.PRIMARY} />
-        </Link>
-      </View>
-    </ProtectedRoute>
-  );
-}
+        <View style={styles.bodyWrapper}>
+          <CircularChart categoryList={categoryList} />
+          <CategoryList categoryList={categoryList} />
+        </View>
+      </ScrollView>
+
+      <Link href="/add-new-category" style={styles.fabContainer}>
+        <View style={styles.fabButton}>
+          <Ionicons name="add" size={40} color="#fff" />
+        </View>
+      </Link>
+
+   </View>
+</ProtectedRoute>
+
+);
+};
 
 const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    bottom: 16,
-    right: 16,
+  headerWrapper: {
+    height: 180,
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
+    backgroundColor: colors.PRIMARY,
+    elevation: 8,
   },
-  noInternet: {
+
+  bodyWrapper: {
+    padding: 20,
+    marginTop: -60,
+  },
+
+  fabContainer: {
     position: "absolute",
-    top: 0,
-    width: "100%",
-    backgroundColor: "red",
-    padding: 10,
+    bottom: 25,
+    right: 25,
+  },
+
+  fabButton: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+    backgroundColor: colors.PRIMARY,
     alignItems: "center",
+    justifyContent: "center",
+    elevation: 10,
+    shadowColor: "#4C6FFF",
+  },
+
+  noInternet: {
+    backgroundColor: "#FF4B4B",
+    padding: 10,
     flexDirection: "row",
     justifyContent: "center",
-    zIndex: 1,
+    alignItems: "center",
   },
+
   noInternetText: {
     color: "white",
     marginLeft: 8,

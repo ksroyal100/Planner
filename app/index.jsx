@@ -34,7 +34,8 @@ export default function LoginScreen() {
       >
         <Text
           style={{
-            fontSize: 35,
+            fontSize: 25,
+            fontFamily: "outfit",
             fontWeight: "bold",
             textAlign: "center",
             color: "white",
@@ -45,7 +46,7 @@ export default function LoginScreen() {
         </Text>
         <Text
           style={{
-            fontSize: 20,
+            fontSize: 18,
             textAlign: "center",
             color: "white",
             marginTop: 20,
@@ -63,12 +64,14 @@ export default function LoginScreen() {
               borderRadius: 10,
               color: Colors.PRIMARY,
               fontSize: 25,
+              fontFamily:"outfit",
               textAlign: "center",
               marginTop: 30,
             }}
           >
             Get Started
           </Text>
+          
         </TouchableOpacity>
       </View>
     </View>
